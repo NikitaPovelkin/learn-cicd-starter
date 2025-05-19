@@ -47,3 +47,19 @@ jobs:
       
       - name: Check linting
         run: staticcheck ./...
+  
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v2'
+
+    - name: 'Deploy'
+      run: 'gcloud builds submit --tag us-central1-docker.pkg.dev/notely-460010/notely-ar-repo/nikitapovelkin/notely:latest .'
